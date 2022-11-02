@@ -8,12 +8,12 @@ import React, { Component } from 'react';
 // import styled from 'styled-components'
 
 //*      Components      //
-import SearchBar from 'components/SearchBar';
+// import SearchBar from 'components/SearchBar';
 import Modal from 'components/Modal';
-import ImageGallery from 'components/ImageGallery';
-import ImageGalleryItem from 'components/ImageGalleryItem';
-import Loader from 'components/Loader';
-import Button from 'components/Button';
+// import ImageGallery from 'components/ImageGallery';
+// import ImageGalleryItem from 'components/ImageGalleryItem';
+// import Loader from 'components/Loader';
+// import Button from 'components/Button';
 
 
 // const API_KEY = `30114983 - 364137b9a9ec33f130a531f95`;
