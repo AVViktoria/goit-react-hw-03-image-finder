@@ -23,21 +23,46 @@ import Button from 'components/Button';
 //*      Root      //
 class App extends Component {
   state = {
+    largeImageURL:"",
     page: 1,
+    showModal:false,
   };
-  //
+ 
+ toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
+
   //*     //
-  //
+  //onImgClick
+    // //*  слушатель событий по кнопке  //
+  // handleSubmit = evt => {
+  //   evt.preventDefault();
+  //   this.props.onSubmit(this.state);
+  //   this.reset();
+  // };
+  // //*  очищаем   сбрасываем   форму  //
+  // reset = () => {
+  //   this.setState({ name: '', number: '' });
+  // };
+
   render() {
-    //
+    const { showModal } = this.state;
     return (
       <>
-        <SearchBar />
-        <Modal/>
+        <Modal onClose={this.toggleModal} />
+        <button type='button' onClick={this.toggleModal}>Open Modal</button>
+        {showModal && (<Modal>
+          <h1>Hello</h1>
+          <button type= 'button' onClick={this.toggleModal}>Close Modal</button>
+        </Modal>)}
+        {/* <SearchBar />
+        
         <ImageGallery />
         <ImageGalleryItem />
         <Loader />
-        <Button/>
+        <Button/> */}
          
       </>
     );
