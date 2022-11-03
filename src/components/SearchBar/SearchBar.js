@@ -5,13 +5,12 @@ class SearchBar extends Component {
     searchQuery: '',
   };
 
-  //$(this.state.apiUrl)/?q=${this.state.searchText}&page=1&key=${this.state.apiKey}&image_type=photo&orientation=horizontal&safesearch=true&per_page=12
   //*  прописываем  внутри инпута   //
   onFormChange = evt => {
     this.setState({ searchQuery: evt.currentTarget.value.toLowerCase() });
   };
 
-  // //*  слушатель событий по кнопке  //
+  //*  слушатель событий по кнопке  //
   handleSubmit = evt => {
     evt.preventDefault();
     this.props.onSubmit(this.state.searchQuery);
