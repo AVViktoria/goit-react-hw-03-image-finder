@@ -4,32 +4,33 @@ import './Modal.css';
 
 const modalRoot = document.querySelector('#modal-root');
 class Modal extends Component {
-  state = {};
-
   componentDidMount() {
-    // console.log('Modal componentDidMount');
     window.addEventListener('keydown', this.handleKeyDown);
   }
   componentWillUnmount() {
-    // console.log('Modal componentWillUnmount');
     window.removeEventListener('keydown', this.handleKeyDown);
   }
-  handleKeyDown = e => {
-    if (e.code === 'Escape') {
-      this.props.onClose();
+  handleKeyDown = evt => {
+    if (evt.code === 'Escape') {
+      this.props.closeModal();
     }
   };
-  handleBackdropClick = event => {
-    if (event.currentTarget === event.target) {
-      this.props.onClose();
+  handleBackdropClick = evt => {
+    if (evt.currentTarget === evt.target) {
+      // console.log('currentTarget: ', evt.currentTarget);
+      // console.log('target: ', evt.target);
+
+      this.props.closeModal();
     }
   };
 
   render() {
+    const { url, alt } = this.props;
     return createPortal(
       <div className="Modal__backdrop" onClick={this.handleBackdropClick}>
-        <div className="Modal__content">{this.props.children}</div>
-        {/* <img src="" alt="" /> */}
+        <div className="Modal__content">
+          <img src={url} alt={alt} />
+        </div>
       </div>,
       modalRoot
     );
@@ -37,44 +38,3 @@ class Modal extends Component {
 }
 
 export default Modal;
-//* const modalRoot = document.querySelector('#modal-root');
-
-//* export default class Modal extends Component {
-//*   componentDidMount() {
-//*     console.log('Modal componentDidMount');
-//*     window.addEventListener('keydown', this.handleKeyDown);
-//*   }
-
-//*   componentWillUnmount() {
-//*     console.log('Modal componentWillUnmount');
-//*     window.removeEventListener('keydown', this.handleKeyDown);
-//*   }
-
-//*   handleKeyDown = e => {
-//*     if (e.code === 'Escape') {
-//*       console.log('Нажали ESC, нужно закрыть модалку');
-
-//*       this.props.onClose();
-//*     }
-//*   };
-
-//*   handleBackdropClick = event => {
-//*     // console.log('Кликнули в бекдроп');
-
-//*     // console.log('currentTarget: ', event.currentTarget);
-//*     // console.log('target: ', event.target);
-
-//*     if (event.currentTarget === event.target) {
-//*       this.props.onClose();
-//*     }
-//*   };
-
-//*   render() {
-//*     return createPortal(
-//*       <div className="Modal__backdrop" onClick={this.handleBackdropClick}>
-//*         <div className="Modal__content">{this.props.children}</div>
-//*       </div>,
-//*       modalRoot,
-//*     );
-//*   }
-//* }

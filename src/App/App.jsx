@@ -14,25 +14,61 @@ import Modal from 'components/Modal';
 // import ImageGalleryItem from 'components/ImageGalleryItem';
 // import Loader from 'components/Loader';
 // import Button from 'components/Button';
+import fetchImages from '../components/Service'
 
 
-// const API_KEY = `30114983 - 364137b9a9ec33f130a531f95`;
-// const API_LINK = `https://pixabay.com/api/?key=30114983-364137b9a9ec33f130a531f95&q=yellow+flowers&image_type=photo`;
 
 
 //*      Root      //
 class App extends Component {
   state = {
-    largeImageURL:"",
+   articles: [],
+    search: '',
     page: 1,
-    showModal:false,
+    per_page: 12,
+    loading: false,
+    largeImageURL: null,
+    
   };
- 
- toggleModal = () => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
+componentDidUpdate(prevProps, prevState) {
+    // const { query } = this.state;
+     if (
+      prevProps.searchName !== this.props.searchName ||
+      prevState.page !== this.state.page
+     ) {
+       this.fetchImages()
+    .catch(error => this.setState({ error }))
+        .finally(() => this.setState({ loader: false }));
+    }
+  }
+
+//  toggleModal = () => {
+//     this.setState(({ showModal }) => ({
+//       showModal: !showModal,
+//     }));
+//  };
+//   hideLoaderInModal = () => this.setState({ loader: false });
+  
+// onSubmit = e => {
+//     e.preventDefault();
+//     this.setState({
+//       page: 1,
+//       articles: [],
+//       search: e.target[1].value,
+//       loading: true,
+//     });
+// };
+  
+   closeModal = () => {
+    this.setState({ largeImageURL: null });
   };
+  
+  
+  
+  // //*  что бы при постоянном нажатии не перерендывался компонент  //
+  // shouldComponentUpdate (nextProps, nextState) {
+  //  return  this.setState.activeTabIdx !== this.state.activeTabIdx;
+  // };
 
   //*     //
   //onImgClick
@@ -48,22 +84,24 @@ class App extends Component {
   // };
 
   render() {
-    const { showModal } = this.state;
+    const {showModal, url, tag} = this.state;
     return (
       <>
-        <Modal onClose={this.toggleModal} />
+        {/* <Modal onClose={this.toggleModal} />
         <button type='button' onClick={this.toggleModal}>Open Modal</button>
         {showModal && (<Modal>
           <h1>Hello</h1>
           <button type= 'button' onClick={this.toggleModal}>Close Modal</button>
-        </Modal>)}
-        {/* <SearchBar />
+        </Modal>)}  */}
+         {/* <SearchBar />
         
-        <ImageGallery />
-        <ImageGalleryItem />
-        <Loader />
+        <ImageGallery hits={ this.hits} />
+        <ImageGalleryItem /> */}
+        {/*<Loader />
         <Button/> */}
-         
+           {this.state.largeImageURL && (
+          <Modal info={this.state.largeImageURL} closeModal={this.closeModal} />
+        )}
       </>
     );
   }
