@@ -10,11 +10,11 @@ import React, { Component } from 'react';
 //*      Components      //
 // import SearchBar from 'components/SearchBar';
 import Modal from 'components/Modal';
-import ImageGallery from 'components/ImageGallery';
-import ImageGalleryItem from 'components/ImageGalleryItem';
+// import ImageGallery from 'components/ImageGallery';
+// import ImageGalleryItem from 'components/ImageGalleryItem';
 // import Loader from 'components/Loader';
 // import Button from 'components/Button';
-import fetchImages from '../components/Service'
+// import fetchImages from '../components/Service'
 
 
 
@@ -31,17 +31,17 @@ class App extends Component {
     largeImg: "",
     
   };
-componentDidUpdate(prevProps, prevState) {
-    // const { query } = this.state;
-     if (
-      prevProps.searchName !== this.props.searchName ||
-      prevState.page !== this.state.page
-     ) {
-       this.fetchImages()
-    .catch(error => this.setState({ error }))
-        .finally(() => this.setState({ loader: false }));
-    }
-  }
+// componentDidUpdate(prevProps, prevState) {
+//     // const { query } = this.state;
+//      if (
+//       prevProps.searchName !== this.props.searchName ||
+//       prevState.page !== this.state.page
+//      ) {
+//        this.fetchImages()
+//     .catch(error => this.setState({ error }))
+//         .finally(() => this.setState({ loader: false }));
+//     }
+//   }
 
 //  toggleModal = () => {
 //     this.setState(({ showModal }) => ({
