@@ -10,8 +10,8 @@ import React, { Component } from 'react';
 //*      Components      //
 // import SearchBar from 'components/SearchBar';
 import Modal from 'components/Modal';
-// import ImageGallery from 'components/ImageGallery';
-// import ImageGalleryItem from 'components/ImageGalleryItem';
+import ImageGallery from 'components/ImageGallery';
+import ImageGalleryItem from 'components/ImageGalleryItem';
 // import Loader from 'components/Loader';
 // import Button from 'components/Button';
 import fetchImages from '../components/Service'
@@ -22,12 +22,13 @@ import fetchImages from '../components/Service'
 //*      Root      //
 class App extends Component {
   state = {
-   articles: [],
-    search: '',
+   searchQuery: "",
     page: 1,
-    per_page: 12,
-    loading: false,
-    largeImageURL: null,
+    status: "idle",
+    error: null,
+    result: [],
+    modalOpen: false,
+    largeImg: "",
     
   };
 componentDidUpdate(prevProps, prevState) {
@@ -59,11 +60,19 @@ componentDidUpdate(prevProps, prevState) {
 //     });
 // };
   
-   closeModal = () => {
-    this.setState({ largeImageURL: null });
+  onModalOpen = (event) => {
+    this.setState({
+      modalOpen: true,
+      largeImg: event.target.dataset.large,
+    });
   };
-  
-  
+
+  onModalClose = () => {
+    this.setState({
+      modalOpen: false,
+      largeImg: "",
+    });
+  };
   
   // //*  что бы при постоянном нажатии не перерендывался компонент  //
   // shouldComponentUpdate (nextProps, nextState) {
@@ -99,9 +108,9 @@ componentDidUpdate(prevProps, prevState) {
         <ImageGalleryItem /> */}
         {/*<Loader />
         <Button/> */}
-           {this.state.largeImageURL && (
-          <Modal info={this.state.largeImageURL} closeModal={this.closeModal} />
-        )}
+           {this.state.modalOpen && (
+              <Modal onClose={this.onModalClose} link={this.state.largeImg} />
+            )}
       </>
     );
   }

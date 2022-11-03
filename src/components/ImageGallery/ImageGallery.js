@@ -2,16 +2,16 @@ import React from 'react';
 import ImageGalleryItem from '../ImageGalleryItem';
 // import PropTypes from 'prop-types';
 
-const ImageGallery = ({ hits }) => {
+const ImageGallery = ({ onModalOpen, hits }) => {
   //  largeImageURL, largeImageURL, alt
   // img src={url} alt={alt} />
   return (
     <ul className="gallery">
-      {hits.map(({ id }) => (
-        <li key={id} className="gallery-item">
-          <ImageGalleryItem />
-        </li>
-      ))}
+      {hits.map(hit => {
+        return (
+          <ImageGalleryItem hit={hit} key={hit.id} onModalOpen={onModalOpen} />
+        );
+      })}
     </ul>
   );
 };
