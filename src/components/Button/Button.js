@@ -1,17 +1,11 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class Button extends Component {
-  state = {};
-
-  //*            //
-
-  render() {
-    return (
-      <button className="inputButton" type="submit">
-        Add contact
-      </button>
-    );
-  }
-}
+const Button = ({ onLoadMore }) => {
+  return (
+    <button className="inputButton" type="button" onClick={onLoadMore}>
+      Add contact
+    </button>
+  );
+};
 
 export default Button;
