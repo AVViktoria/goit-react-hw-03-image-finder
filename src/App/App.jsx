@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 
 //*      Components      //
 // import SearchBar from 'components/SearchBar';
-import Modal from 'components/Modal';
+// import Modal from 'components/Modal';
 // import ImageGallery from 'components/ImageGallery';
 // import ImageGalleryItem from 'components/ImageGalleryItem';
 // import Loader from 'components/Loader';
@@ -108,9 +108,9 @@ class App extends Component {
         <ImageGalleryItem /> */}
         {/*<Loader />
         <Button/> */}
-           {this.state.modalOpen && (
+           {/* {this.state.modalOpen && (
               <Modal onClose={this.onModalClose} link={this.state.largeImg} />
-            )}
+            )} */}
       </>
     );
   }
