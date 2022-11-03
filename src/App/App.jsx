@@ -84,7 +84,7 @@ componentDidUpdate(prevProps, prevState) {
   // };
 
   render() {
-    const {showModal, url, tag} = this.state;
+    // const {showModal, url, tag} = this.state;
     return (
       <>
         {/* <Modal onClose={this.toggleModal} />
