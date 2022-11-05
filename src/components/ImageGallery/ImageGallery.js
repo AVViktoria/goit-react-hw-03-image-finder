@@ -3,20 +3,36 @@ import ImageGalleryItem from '../ImageGalleryItem';
 // import { toast } from 'react-toastify';
 // import PropTypes from 'prop-types';
 
-const ImageGallery = ({ onModalOpen, hits }) => {
-  //  largeImageURL, largeImageURL, alt
-  // img src={url} alt={alt} />
+const ImageGallery = ({ onModalOpen, images }) => {
   return (
-    <ul className="gallery">
-      {hits.map(hit => {
-        return (
-          <ImageGalleryItem hit={hit} key={hit.id} onModalOpen={onModalOpen} />
-        );
-      })}
+    <ul className="ImageGallery">
+      {images.map(image => (
+        <ImageGalleryItem
+          key={image.id}
+          webformatURL={image.webformatURL}
+          largeImageURL={image.largeImageURL}
+          openModal={onModalOpen}
+        />
+      ))}
     </ul>
   );
 };
 
+//********* */
+// const ImageGallery = ({ onModalOpen, hits }) => {
+//   //  largeImageURL, largeImageURL, alt
+//   // img src={url} alt={alt} />
+//   return (
+//     <ul className="gallery">
+//       {hits.map(hit => {
+//         return (
+//           <ImageGalleryItem hit={hit} key={hit.id} onModalOpen={onModalOpen} />
+//         );
+//       })}
+//     </ul>
+//   );
+// };
+//********* */
 // ImageGallery.propTypes = {
 //   images: PropTypes.array.isRequired,
 // contacts: PropTypes.arrayOf(

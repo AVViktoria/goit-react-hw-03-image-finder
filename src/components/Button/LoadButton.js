@@ -5,6 +5,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 const LoadButton = ({ onLoadMore }) => {
   return (
     <Button
+      type="button"
       variant="outlined"
       startIcon={<AutoAwesomeIcon />}
       onClick={onLoadMore}

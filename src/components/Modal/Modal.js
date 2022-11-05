@@ -15,26 +15,44 @@ class Modal extends Component {
       this.props.closeModal();
     }
   };
-  handleBackdropClick = evt => {
-    if (evt.currentTarget === evt.target) {
-      // console.log('currentTarget: ', evt.currentTarget);
-      // console.log('target: ', evt.target);
+  // handleBackdropClick = evt => {
+  //   if (evt.currentTarget === evt.target) {
+  //     // console.log('currentTarget: ', evt.currentTarget);
+  //     // console.log('target: ', evt.target);
 
-      this.props.closeModal();
-    }
-  };
-
+  //     this.props.closeModal();
+  //   }
+  // };
   render() {
-    // const { url, alt } = this.props;
+    const { largeImg, closeModal } = this.props;
     return createPortal(
-      <div className="Modal__backdrop" onClick={this.handleBackdropClick}>
-        <div className="Modal__content">
-          <img src={this.props.link} alt="img" />
+      <div
+        className="Overlay"
+        onClick={e => {
+          if (e.target === e.currentTarget) {
+            closeModal();
+          }
+        }}
+      >
+        <div className="Modal">
+          <img src={largeImg} alt="" />
         </div>
       </div>,
       modalRoot
     );
   }
 }
+//   render() {
+//     // const { url, alt } = this.props;
+//     return createPortal(
+//       <div className="Modal__backdrop" onClick={this.handleBackdropClick}>
+//         <div className="Modal__content">
+//           <img src={this.props.link} alt="img" />
+//         </div>
+//       </div>,
+//       modalRoot
+//     );
+//   }
+// }
 
 export default Modal;

@@ -16,3 +16,6 @@ const fetchImages = (searchQuery, page) =>
 
 const api = { fetchImages };
 export default api;
+// (
+//   const response = await axios.get(`?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&safesearch=true&per_page=12`).then(response => response.data);
+//   )

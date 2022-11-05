@@ -1,17 +1,30 @@
 import React from 'react';
 
-const ImageGalleryItem = ({ hit, onModalOpen }) => {
+const ImageGalleryItem = ({ largeImageURL, webformatURL, openModal }) => {
   return (
-    <li className="gallery-item">
+    <li className="ImageGalleryItem">
       <img
-        className="galleryItemImg"
-        onClick={onModalOpen}
-        data-large={hit.largeImageURL}
-        src={hit.previewURL}
-        alt={hit.tags}
+        src={webformatURL}
+        alt=""
+        className="ImageGalleryItem-image"
+        onClick={() => openModal(largeImageURL)}
       />
     </li>
   );
 };
-
+////*********** */
+// const ImageGalleryItem = ({ hit, onModalOpen }) => {
+//   return (
+//     <li className="gallery-item">
+//       <img
+//         className="galleryItemImg"
+//         onClick={onModalOpen}
+//         data-large={hit.largeImageURL}
+//         src={hit.previewURL}
+//         alt={hit.tags}
+//       />
+//     </li>
+//   );
+// };
+////*********** */
 export default ImageGalleryItem;

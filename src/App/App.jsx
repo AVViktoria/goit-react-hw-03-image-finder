@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { ToastContainer, toast} from 'react-toastify';
 
-// import '../index.scss'
-
-
 //*      Libraries      //
-// import { nanoid } from 'nanoid';
-// import styled from 'styled-components'
 
 //*      Components      //
 import SearchBar from 'components/SearchBar';
@@ -16,7 +11,7 @@ import ImageGallery from 'components/ImageGallery';
 import Loader from 'components/Loader';
 import LoadButton from 'components/Button';
 // import fetchImages from '../components/Service'
-import api from '../components/Service/FetchApi'
+import api from '../Service/FetchApi'
 
 //* status   //
 // 'idle'
@@ -36,6 +31,7 @@ class App extends Component {
     modalOpen: false,
     largeImg: "",
     loading: false,
+    totalHits: 0,
   };
   //   componentDidMount() {
   //     this.setState({ loading: true });
@@ -53,114 +49,73 @@ class App extends Component {
   //     this.setState({ query: params.get('query') });
   //   }  
   
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_, prevState) {
     const prevQuery = prevState.searchQuery;
     const nextQuery = this.state.searchQuery;
     const prevPageNumber = prevState.page;
     const nextPageNumber = this.state.page;
-    const prevImages = prevState.images;
     if (
       prevQuery !== nextQuery ||
       prevPageNumber !== nextPageNumber
     ) {
-     
       api
         .fetchImages(nextQuery, nextPageNumber)
-        .then(res => {
-          if (nextPageNumber === 1) {
-            if (res.hits.length === 0) {
-              toast.error('No pictures, sorry. Enter another name, please!');
-              this.setState({ images: [], status: "idle" });
-              //  return;
-            } else {
-              toast.success("We found ${res.total} pictures")
-        
-              this.setState({ images: res.hits, status: "resolved" });
-              if (this.state.images.length === res.total) {
-                this.setState({ status: "endOfList" });
-              }
-            }
-          }
-          if (nextPageNumber > 1) {
-            this.setState(() => ({
-              images: [...prevImages, ...res.hits],
-              status: "resolved",
-            }));
-            if (this.state.images.length === res.total) {
-              toast.info("End of list,sorry!");
-              this.setState({ status: "endOfList" });
-            }
-          }
-        })
-        .catch((error) => {
-          this.setState({ error, status: "rejected" });
-        });
-    }
+        .then(images => {
+          this.setState(prevState => ({
+            images:
+              nextPageNumber === 1
+              ? [...images]
+              :[...prevState.images, ...images],
+          }))
+        }).finally(() => {
+      this.setState({loading: false})
+    })
   }
+  }
+          //*********** */
+  //       {
+  //         if (nextPageNumber === 1) {
+  //           if (res.hits.length === 0) {
+  //             toast.error('No pictures, sorry. Enter another name, please!');
+  //             this.setState({ images: [], status: "idle" });
+  //             //  return;
+  //           } else {
+  //             toast.success(`We found ${res.total} picture`)
         
-  // componentDidUpdate(prevProps, prevState) {
-  //   const prevQuery = prevState.searchQuery;
-  //   const prevPageNumber = prevState.page;
-  //   const { searchQuery, page, images } = this.state;
-  //   if (prevQuery !== searchQuery || prevPageNumber !== page) {
-  //     try {
-  //       this.setState({ loading: true });
-  //       api
-  //         .fetchImages()
-  //         .then(res => {
-  //           res.data.hits.length === 0
-  //              toast.error('No found, try again!')
-  //             : res.data.hits.forEach(({ id, webformatURL, largeImageURL }) => {
-  //               images.some(image => image.id === id) && this.setState(({ images }) => ({
-  //                 images: [...images, { id, webformatURL, largeImageURL }],
-  //               }))
-  //             })
-  //           this.setState({ loading: false });
-  //         });
-  //     } catch (error) {
-  //       this.setState({ error, loading: false });
-  //     }
+  //             this.setState({ images: res.hits, status: "resolved" });
+  //             if (this.state.images.length === res.total) {
+  //               this.setState({ status: "endOfList" });
+  //             }
+  //           }
+  //         }
+  //         if (nextPageNumber > 1) {
+  //           this.setState(() => ({
+  //             images: [...prevImages, ...res.hits],
+  //             status: "resolved",
+  //           }));
+  //           if (this.state.images.length === res.total) {
+  //             toast.info("End of list,sorry!");
+  //             this.setState({ status: "endOfList" });
+  //           }
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         this.setState({ error, status: "rejected" });
+  //       });
   //   }
   // }
+        //*********** */
 
-
-//     if (this.state.page > 2) {
-//       window.scrollTo({
-//         top: document.documentElement.scrollHeight,
-//         behavior: 'smooth',
-//       });
-//     }
-//   };
-  
-
-//  fetchImages = () => {
-//     const { searchQuery, page } = this.state;
-//     const options = { searchQuery, page };
-//     this.setState({ loading: true });
-//     api
-//       .fetchImages(options)
-//       .then(hits => {
-//         this.setState(prevState => ({
-//           hits: [...prevState.hits, ...hits],
-//           page: prevState.page + 1,
-//           fetchLength: hits.length,
-//         }));
-//       })
-//       .catch(error => this.setState({ error }))
-//       .finally(() => {
-//         this.setState({ loading: false })
-//       });
-//   };
 
     //*   load next 12 pictures, next page  //
    onLoadMore = () => {
-    this.setState(({ page }) => ({ page: page + 1 }));
-  };
+    // this.setState(({ page }) => ({ page: page + 1 }));
+     this.setState(state => ({ page: state.page + 1 }));
+   };
 
   //*  on search submit searchQuery  //
   //*  trim() отрезает пробелы      /
   handleFormSubmit = searchQuery => {
-    // this.setState({ searchQuery });
      if (searchQuery.trim() === '') {
       return toast.error('Enter correct name, please!')
     } else if (searchQuery === this.state.searchQuery) {
@@ -174,20 +129,27 @@ class App extends Component {
   };
 
   //*  open and close modal window  //
-  onModalOpen = (event) => {
-    this.setState({
-      modalOpen: true,
-      largeImg: event.target.dataset.large,
-      // largeImage: images[event].largeImageURL,
-    });
+  toggleModal = largeImg => {
+    if (!largeImg) {
+      this.setState({ largeImg: '', modalOpen: false });
+      return;
+    }
+    this.setState({ largeImg, modalOpen: true });
   };
-  onModalClose = () => {
-    this.setState({
-      modalOpen: false,
-      largeImg: "",
-    }); 
-    // this.setState(({ showModal }) => ({ showModal: !showModal }));
-  };
+  // onModalOpen = (event) => {
+  //   this.setState({
+  //     modalOpen: true,
+  //     largeImg: event.target.dataset.large,
+  //     // largeImage: images[event].largeImageURL,
+  //   });
+  // };
+  // onModalClose = () => {
+  //   this.setState({
+  //     modalOpen: false,
+  //     largeImg: "",
+  //   }); 
+    
+  // };
   //*                                  //
   // //*  что бы при постоянном нажатии не перерендывался компонент  //
   // shouldComponentUpdate (nextProps, nextState) {
@@ -197,12 +159,29 @@ class App extends Component {
   
 
   render() {
-  const { onLoadMore, onModalOpen, onModalClose, handleFormSubmit } = this;
-  const { images,  largeImg, modalOpen, status } = this.state;
+  const { onLoadMore, toggleModal, handleFormSubmit } = this;
+  const { images,  largeImg, modalOpen,  loading, totalHits } = this.state;
     return (
       <>
-         <SearchBar onSubmit={handleFormSubmit} />
-
+       
+        <SearchBar onSubmit={handleFormSubmit} />
+        {loading && <Loader />}
+        <ImageGallery images={images} openModal={toggleModal} />
+        {!!totalHits && (
+          <LoadButton onLoadMore={onLoadMore} />
+        )}
+        {modalOpen && (
+          <Modal
+            modalImage={largeImg}
+            closeModal={toggleModal}
+          />
+        )}
+        
+        
+        
+        
+        {/* <SearchBar onSubmit={handleFormSubmit} /> */}
+{/* 
          {status === "pending" && <Loader />}
         {status === "resolved" && (
           <>
@@ -229,7 +208,7 @@ class App extends Component {
         )}
          {status === "rejected" && (
           toast.error('No found, try again!') 
-        )}
+        )} */}
 
         {/* {images.length !== 0 && (
           <ImageGallery images={images} onModalOpen={onModalOpen} />
