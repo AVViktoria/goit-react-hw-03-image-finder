@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { toast } from 'react-toastify';
 
 class SearchBar extends Component {
   state = {
@@ -11,8 +12,22 @@ class SearchBar extends Component {
   };
 
   //*  слушатель событий по кнопке  //
+  //*  trim() отрезает пробелы      //
   handleSubmit = evt => {
     evt.preventDefault();
+    if (this.state.searchQuery.trim() === '') {
+      return toast.error('Enter search name, please', {
+        position: 'top-right',
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: 'colored',
+      });
+    }
+
     this.props.onSubmit(this.state.searchQuery);
     this.reset();
   };

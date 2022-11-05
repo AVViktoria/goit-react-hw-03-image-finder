@@ -1,5 +1,6 @@
 import React from 'react';
 import ImageGalleryItem from '../ImageGalleryItem';
+// import { toast } from 'react-toastify';
 // import PropTypes from 'prop-types';
 
 const ImageGallery = ({ onModalOpen, hits }) => {
