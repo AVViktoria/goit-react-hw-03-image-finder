@@ -1,58 +1,41 @@
-import React, { Component } from 'react';
-import { toast } from 'react-toastify';
+import { Component } from 'react';
 
-class SearchBar extends Component {
+class Searchbar extends Component {
   state = {
-    searchQuery: '',
+    query: '',
   };
 
-  //*  прописываем  внутри инпута   //
-  onFormChange = evt => {
-    this.setState({ searchQuery: evt.currentTarget.value.toLowerCase() });
+  handleChange = e => {
+    const query = e.target.value;
+    this.setState({ query });
   };
 
-  //*  слушатель событий по кнопке  //
-  //*  trim() отрезает пробелы      //
-  handleSubmit = evt => {
-    evt.preventDefault();
-    if (this.state.searchQuery.trim() === '') {
-      return toast.error('Enter search name, please');
-    }
-
-    this.props.onSubmit(this.state.searchQuery);
-    this.reset();
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.onSubmit(this.state.query);
   };
-
-  //*  очищаем   сбрасываем   форму  //
-  reset = () => {
-    this.setState({ searchQuery: '' });
-  };
-
   render() {
-    // console.log(this.state.images);
-    const { searchQuery } = this.state;
     return (
-      <div className="inputBox">
-        <header className="searchbar">
-          <form className="form" onSubmit={this.handleSubmit}>
-            <button type="submit" className="button">
-              <span className="button-label">Search</span>
-            </button>
-            <input
-              className="input"
-              type="text"
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-              onChange={this.onFormChange}
-              value={searchQuery}
-              name={searchQuery}
-            />
-            {/* {images.length > 0 ? <ImageGallery images={images} /> : null} */}
-          </form>
-        </header>
-      </div>
+      <header className="searchbar">
+        <form className="form" onSubmit={this.handleSubmit}>
+          <button type="submit" className="button">
+            <span className="button-label">Search</span>
+          </button>
+
+          <input
+            className="input"
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+            name="query"
+            value={this.state.query}
+            onChange={this.handleChange}
+          />
+        </form>
+      </header>
     );
   }
 }
-export default SearchBar;
+
+export default Searchbar;

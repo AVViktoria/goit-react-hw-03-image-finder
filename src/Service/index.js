@@ -1,1 +1,1 @@
-export { default } from './FetchApi';
+export { default } from './api';
