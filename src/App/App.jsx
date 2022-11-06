@@ -1,81 +1,146 @@
-
 import { Component } from 'react';
-import Modal from 'components/Modal';
-import ImageGallery from 'components/ImageGallery';
-// import ImageGalleryItem from 'components/ImageGalleryItem';
+import { ToastContainer } from 'react-toastify';
+// import 'react-toastify/dist/ReactToastify.css';
+import fetchImages from 'Service/images-api';
 import Searchbar from 'components/Searchbar';
-import LoadMore from 'components/LoadMore';
+import Button from 'components/Button';
+import ImageGallery from 'components/ImageGallery';
 import Loader from 'components/Loader';
-import { fetchImages } from 'Service/api';
-
+import Modal from 'components/Modal';
 
 class App extends Component {
   state = {
-    images: [],
     query: '',
     page: 1,
+    imagesOnPage: 0,
+    totalImages: 0,
     isLoading: false,
-    modalImage: '',
     showModal: false,
-    totalHits: 0,
+    images: null,
+    error: null,
+    currentImageUrl: null,
+    currentImageDescription: null,
   };
 
-  componentDidUpdate = (_, prevState) => {
-    if (
-      this.state.query !== prevState.query ||
-      this.state.page !== prevState.page
-    ) {
-      this.setState({ isLoading: true });
-      fetchImages(this.state.query, this.state.page)
-        .then(data => {
-          this.setState(prevState => ({
-            images:
-              this.state.page === 1
-                ? [...data.hits]
-                : [...prevState.images, ...data.hits],
-            totalHits:
-              this.state.page === 1
-                ? data.totalHits - data.hits.length
-                : data.totalHits - [...prevState.images, ...data.hits].length,
+  componentDidUpdate(prevProps, prevState) {
+    const { query, page } = this.state;
+
+    if (prevState.query !== query) {
+      this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
+
+      fetchImages(query)
+        .then(({ hits, totalHits }) => {
+          const imagesArray = hits.map(hit => ({
+            id: hit.id,
+            description: hit.tags,
+            smallImage: hit.webformatURL,
+            largeImage: hit.largeImageURL,
           }));
+
+          return this.setState({
+            page: 1,
+            images: imagesArray,
+            imagesOnPage: imagesArray.length,
+            totalImages: totalHits,
+          });
         })
-        .finally(() => {
-          this.setState({ isLoading: false });
-        });
+        .catch(error => this.setState({ error }))
+        .finally(() =>
+          this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
+        );
+    }
+
+    if (prevState.page !== page && page !== 1) {
+      this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
+
+      fetchImages(query, page)
+        .then(({ hits }) => {
+          const imagesArray = hits.map(hit => ({
+            id: hit.id,
+            description: hit.tags,
+            smallImage: hit.webformatURL,
+            largeImage: hit.largeImageURL,
+          }));
+
+          return this.setState(({ images, imagesOnPage }) => {
+            return {
+              images: [...images, ...imagesArray],
+              imagesOnPage: imagesOnPage + imagesArray.length,
+            };
+          });
+        })
+        .catch(error => this.setState({ error }))
+        .finally(() =>
+          this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
+        );
+    }
+  }
+
+  getSearchRequest = query => {
+    this.setState({ query });
+  };
+
+  onNextFetch = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
+  openModal = e => {
+    const currentImageUrl = e.target.dataset.large;
+    const currentImageDescription = e.target.alt;
+
+    if (e.target.nodeName === 'IMG') {
+      this.setState(({ showModal }) => ({
+        showModal: !showModal,
+        currentImageUrl: currentImageUrl,
+        currentImageDescription: currentImageDescription,
+      }));
     }
   };
 
-  handleSubmit = query => {
-    this.setState({ query, page: 1 });
-  };
-  handleLoadMore = () => {
-    this.setState(state => ({ page: state.page + 1 }));
-  };
-
-  toggleModal = modalImage => {
-    if (!modalImage) {
-      this.setState({ modalImage: '', showModal: false });
-      return;
-    }
-    this.setState({ modalImage, showModal: true });
-  };
   render() {
+    const {
+      images,
+      imagesOnPage,
+      totalImages,
+      isLoading,
+      showModal,
+      currentImageUrl,
+      currentImageDescription,
+    } = this.state;
+
+    const getSearchRequest = this.getSearchRequest;
+    const onNextFetch = this.onNextFetch;
+    const openModal = this.openModal;
+    const toggleModal = this.toggleModal;
+
     return (
       <>
-        <Searchbar onSubmit={this.handleSubmit} />
-        {this.state.isLoading && <Loader />}
-        <ImageGallery images={this.state.images} openModal={this.toggleModal} />
-        {!!this.state.totalHits && (
-          <LoadMore onLoadMore={this.handleLoadMore} />
+        <Searchbar onSubmit={getSearchRequest} />
+
+        {images && <ImageGallery images={images} openModal={openModal} />}
+
+        {isLoading && <Loader />}
+
+        {imagesOnPage >= 12 && imagesOnPage < totalImages && (
+          <Button onNextFetch={onNextFetch} />
         )}
-        {this.state.showModal && (
+
+        {showModal && (
           <Modal
-            modalImage={this.state.modalImage}
-            closeModal={this.toggleModal}
+            onClose={toggleModal}
+            currentImageUrl={currentImageUrl}
+            currentImageDescription={currentImageDescription}
           />
         )}
+
+        <ToastContainer />
       </>
     );
   }
 }
+
 export default App;
